@@ -1,13 +1,13 @@
 package com.leo.netty;
 
 
+import com.leo.netty.handler.FirstClientHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.string.StringEncoder;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
 import java.util.Date;
@@ -37,9 +37,10 @@ public class NettyClient {
                 .option(ChannelOption.TCP_NODELAY, true)
                 // IO 处理逻辑
                 .handler(new ChannelInitializer<Channel>() {
+                    // 向服务端读写数据
                     @Override
                     protected void initChannel(Channel channel) throws Exception {
-                        channel.pipeline().addLast(new StringEncoder());
+                        channel.pipeline().addLast(new FirstClientHandler());
                     }
                 });
         // 建立连接

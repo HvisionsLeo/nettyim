@@ -1,5 +1,6 @@
 package com.leo.netty;
 
+import com.leo.netty.handler.FirstServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
@@ -45,13 +46,8 @@ public class NettyServer {
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
                     protected void initChannel(NioSocketChannel nioSocketChannel) throws Exception {
-                        nioSocketChannel.pipeline().addLast(new StringDecoder());
-                        nioSocketChannel.pipeline().addLast(new SimpleChannelInboundHandler<String>() {
-                            @Override
-                            protected void channelRead0(ChannelHandlerContext channelHandlerContext, String s) throws Exception {
-                                System.out.println("接收到客户端信息：" + s);
-                            }
-                        });
+//                        nioSocketChannel.pipeline().addLast(new StringDecoder());
+                        nioSocketChannel.pipeline().addLast(new FirstServerHandler());
                     }
                 });
         bind(serverBootstrap, 8081);
@@ -61,10 +57,10 @@ public class NettyServer {
         serverBootstrap.bind(port).addListener(future -> {
             // 判断是否绑定成功
             if (future.isSuccess()) {
-                System.out.println("端口号：" + port + "绑定成功！");
+                System.out.println("端口号：[" + port + "]绑定成功！");
             } else {
                 // 绑定失败，则将端口号+1继续绑定
-                System.err.println("端口号：" + port + "绑定失败！");
+                System.err.println("端口号：[" + port + "]绑定失败！");
                 bind(serverBootstrap, port + 1);
             }
         });
