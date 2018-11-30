@@ -3,7 +3,9 @@ package com.leo.im.handler;
 import com.leo.bean.request.LoginRequestPacket;
 import com.leo.bean.Packet;
 import com.leo.bean.response.LoginResponsePacket;
+import com.leo.bean.response.MessageResponsePacket;
 import com.leo.codec.PacketCodec;
+import com.leo.util.LoginUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -40,10 +42,14 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         if (packet instanceof LoginResponsePacket) {
             LoginResponsePacket loginResponsePacket = (LoginResponsePacket) packet;
             if (loginResponsePacket.isSuccess()) {
+                LoginUtil.markAsLogin(ctx.channel());
                 System.out.println("登陆成功！");
             } else {
                 System.out.println("登录失败，原因：" + loginResponsePacket.getReason());
             }
+        } else if (packet instanceof MessageResponsePacket){
+            MessageResponsePacket messageResponsePacket = (MessageResponsePacket) packet;
+            System.out.println("服务端回应：" + messageResponsePacket.getMessage());
         }
     }
 }

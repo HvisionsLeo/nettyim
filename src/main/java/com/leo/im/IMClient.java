@@ -1,13 +1,19 @@
 package com.leo.im;
 
+import com.leo.bean.request.MessageRequestPacket;
+import com.leo.codec.PacketCodec;
 import com.leo.im.handler.ClientHandler;
+import com.leo.util.LoginUtil;
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 
@@ -45,6 +51,9 @@ public class IMClient {
         bootstrap.connect(host, port).addListener(future -> {
             if (future.isSuccess()) {
                 System.out.println("[" + host + "]:[" + port + "]连接成功");
+                Channel channel = ((ChannelFuture) future).channel();
+                // 启动控制台线程
+                startConsoleThread(channel);
             } else if (retry == 0) {
                 System.err.println("重连次数用完，停止重连。。。");
             } else {
@@ -55,5 +64,25 @@ public class IMClient {
                         connect(bootstrap, host, port, retry - 1), delay, TimeUnit.SECONDS);
             }
         });
+    }
+
+    /**
+     * 启动控制台线程
+     *
+     * @param channel
+     */
+    private static void startConsoleThread(Channel channel) {
+        new Thread(() -> {
+            while (!Thread.interrupted()) {
+                if (LoginUtil.hasLogin(channel)) {
+                    System.out.println("输入要发送给服务端的数据：");
+                    Scanner scanner = new Scanner(System.in);
+                    MessageRequestPacket packet = new MessageRequestPacket();
+                    packet.setMessage(scanner.nextLine());
+                    ByteBuf byteBuf = PacketCodec.INSTANCE().encode(channel.alloc(), packet);
+                    channel.writeAndFlush(byteBuf);
+                }
+            }
+        }).start();
     }
 }

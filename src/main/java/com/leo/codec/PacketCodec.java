@@ -3,7 +3,9 @@ package com.leo.codec;
 import com.leo.bean.Command;
 import com.leo.bean.request.LoginRequestPacket;
 import com.leo.bean.Packet;
+import com.leo.bean.request.MessageRequestPacket;
 import com.leo.bean.response.LoginResponsePacket;
+import com.leo.bean.response.MessageResponsePacket;
 import com.leo.serializer.Serializer;
 import com.leo.serializer.SerializerAlgorithm;
 import com.leo.serializer.impl.JSONSerializer;
@@ -30,6 +32,8 @@ public class PacketCodec {
         packetTypeMap = new HashMap<>();
         packetTypeMap.put(Command.LOGIN_REQUEST, LoginRequestPacket.class);
         packetTypeMap.put(Command.LOGIN_RESPONSE, LoginResponsePacket.class);
+        packetTypeMap.put(Command.MESSAGE_REQUEST, MessageRequestPacket.class);
+        packetTypeMap.put(Command.MESSAGE_RESPONSE, MessageResponsePacket.class);
         serializerMap = new HashMap<>();
         serializerMap.put(SerializerAlgorithm.JSON, new JSONSerializer());
     }
@@ -74,8 +78,8 @@ public class PacketCodec {
         // 实际编码过程
         byteBuf.writeInt(MAGIC_NUMBER); // 魔数
         byteBuf.writeByte(packet.getVersion()); // 版本
-        byteBuf.writeByte(Serializer.DEFAULT.getSerializerAlgorithm());
-        byteBuf.writeByte(packet.getCommand()); // 序列化算法
+        byteBuf.writeByte(Serializer.DEFAULT.getSerializerAlgorithm()); // 序列化算法
+        byteBuf.writeByte(packet.getCommand()); // 指令
         byteBuf.writeInt(bytes.length); // 内容长度
         byteBuf.writeBytes(bytes);  // 内容
         return byteBuf;
