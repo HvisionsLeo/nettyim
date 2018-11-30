@@ -1,4 +1,4 @@
-package com.leo.netty.handler;
+package com.leo.practice.netty.handler;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

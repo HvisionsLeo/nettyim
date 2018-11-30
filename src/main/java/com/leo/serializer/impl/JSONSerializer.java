@@ -1,6 +1,8 @@
-package com.leo.serializer;
+package com.leo.serializer.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.leo.serializer.Serializer;
+import com.leo.serializer.SerializerAlgorithm;
 
 /**
  * @Description: json序列化

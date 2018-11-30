@@ -1,7 +1,7 @@
-package com.leo.netty;
+package com.leo.practice.netty;
 
 
-import com.leo.netty.handler.FirstClientHandler;
+import com.leo.practice.netty.handler.FirstClientHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;

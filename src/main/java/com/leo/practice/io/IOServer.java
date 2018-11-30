@@ -1,4 +1,4 @@
-package com.leo.io;
+package com.leo.practice.io;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -1,12 +1,20 @@
 package com.leo.codec;
 
+import com.leo.bean.Command;
+import com.leo.bean.request.LoginRequestPacket;
 import com.leo.bean.Packet;
+import com.leo.bean.response.LoginResponsePacket;
 import com.leo.serializer.Serializer;
+import com.leo.serializer.SerializerAlgorithm;
+import com.leo.serializer.impl.JSONSerializer;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * @Description:
+ * @Description: 数据包编解码器
  * @Author: Leo
  * @Date: 2018-11-29 下午 5:46
  */
@@ -14,21 +22,59 @@ public class PacketCodec {
 
     private static final int MAGIC_NUMBER = 0x12345678;   // 魔数
 
+    private static final Map<Byte, Class<? extends Packet>> packetTypeMap;
+
+    private static final Map<Byte, Serializer> serializerMap;
+
+    static {
+        packetTypeMap = new HashMap<>();
+        packetTypeMap.put(Command.LOGIN_REQUEST, LoginRequestPacket.class);
+        packetTypeMap.put(Command.LOGIN_RESPONSE, LoginResponsePacket.class);
+        serializerMap = new HashMap<>();
+        serializerMap.put(SerializerAlgorithm.JSON, new JSONSerializer());
+    }
+
+    private volatile static PacketCodec packetCodec;
+
+    private PacketCodec() {
+    }
+
+    public static synchronized PacketCodec INSTANCE() {
+        synchronized (PacketCodec.class) {
+            if (packetCodec == null) {
+                packetCodec = new PacketCodec();
+            }
+        }
+        return packetCodec;
+    }
+
+    /**
+     *  通信协议设计
+     *
+     *  -------------------------------------------------------------------------------
+     *  |  魔数0x123456  |  版本号(1)  |  序列化算法  |  指令  |  数据长度  |    数据    |
+     *  -------------------------------------------------------------------------------
+     *      4字节            1字节         1字节       1字节      4字节         N字节
+     *
+     */
+
     /**
      * 编码
      *
+     * @param alloc  ByteBuf 分配器
      * @param packet 数据包
      * @return byteBuf
      */
-    public ByteBuf encode(Packet packet) {
+    public ByteBuf encode(ByteBufAllocator alloc, Packet packet) {
         // 创建ByteBuf对象
-        ByteBuf byteBuf = ByteBufAllocator.DEFAULT.ioBuffer();
+        ByteBuf byteBuf = alloc.ioBuffer();
         // 序列化java对象
         byte[] bytes = Serializer.DEFAULT.serializer(packet);
 
         // 实际编码过程
         byteBuf.writeInt(MAGIC_NUMBER); // 魔数
         byteBuf.writeByte(packet.getVersion()); // 版本
+        byteBuf.writeByte(Serializer.DEFAULT.getSerializerAlgorithm());
         byteBuf.writeByte(packet.getCommand()); // 序列化算法
         byteBuf.writeInt(bytes.length); // 内容长度
         byteBuf.writeBytes(bytes);  // 内容
@@ -45,9 +91,9 @@ public class PacketCodec {
         // 跳过魔数
         byteBuf.skipBytes(4);
         // 跳过版本号
-        byteBuf.skipBytes(4);
+        byteBuf.skipBytes(1);
         // 序列化算法标识
-        byte serializerAlgorithm = byteBuf.readByte();
+        byte serializeAlgorithm = byteBuf.readByte();
 
         // 指令
         byte command = byteBuf.readByte();
@@ -56,8 +102,26 @@ public class PacketCodec {
         int length = byteBuf.readInt();
 
         byte[] bytes = new byte[length];
+        // 将数据读入bytes
         byteBuf.readBytes(bytes);
-//        Class<? extends Packet> requestType =
+
+        // 获取对象类型
+        Class<? extends Packet> requestType = getRequestType(command);
+
+        // 获取序列化对象
+        Serializer serializer = getSerializer(serializeAlgorithm);
+        if (requestType != null && serializer != null) {
+            return serializer.deserialize(requestType, bytes);
+        }
         return null;
     }
+
+    private Class<? extends Packet> getRequestType(byte command) {
+        return packetTypeMap.get(command);
+    }
+
+    private Serializer getSerializer(byte serializeAlgorithm) {
+        return serializerMap.get(serializeAlgorithm);
+    }
+
 }

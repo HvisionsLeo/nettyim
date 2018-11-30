@@ -1,4 +1,4 @@
-package com.leo.netty.bytebuf;
+package com.leo.practice.netty.bytebuf;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
@@ -29,7 +29,6 @@ public class ByteBufTest {
         // write 方法改变写指针，写的时候发现buffer不可写开始扩容，扩容之后capacity随即改变
         byteBuf.writeBytes(new byte[]{6});
         print("writeByte(6)", byteBuf);
-
         // get方法不改变读写指针
         System.out.println("getByte(3)->" + byteBuf.getByte(3));
         System.out.println("getShort(3)->" + byteBuf.getShort(3));

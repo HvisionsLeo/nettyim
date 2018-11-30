@@ -1,5 +1,7 @@
 package com.leo.serializer;
 
+import com.leo.serializer.impl.JSONSerializer;
+
 /**
  * @Description: 序列化接口
  * @Author: Leo

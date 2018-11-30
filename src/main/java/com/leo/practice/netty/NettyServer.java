@@ -1,15 +1,12 @@
-package com.leo.netty;
+package com.leo.practice.netty;
 
-import com.leo.netty.handler.FirstServerHandler;
+import com.leo.practice.netty.handler.FirstServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
-import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.string.StringDecoder;
 
 /**
  * @Description: netty服务端
