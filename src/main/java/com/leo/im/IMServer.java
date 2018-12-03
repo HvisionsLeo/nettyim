@@ -1,7 +1,7 @@
 package com.leo.im;
 
-import com.leo.im.handler.codec.PacketDecoder;
-import com.leo.im.handler.codec.PacketEncoder;
+import com.leo.im.handler.codec.PacketMessageCodec;
+import com.leo.im.handler.codec.Spliter;
 import com.leo.im.handler.request.LoginRequestHandler;
 import com.leo.im.handler.request.MessageRequestHandler;
 import io.netty.bootstrap.ServerBootstrap;
@@ -34,10 +34,13 @@ public class IMServer {
                     @Override
                     protected void initChannel(NioSocketChannel ch) throws Exception {
 //                        ch.pipeline().addLast(new ServerHandler());
-                        ch.pipeline().addLast(new PacketDecoder());
+//                        ch.pipeline().addLast(new PacketDecoder());
+                        // 拆包，粘包解决
+                        ch.pipeline().addLast(new Spliter());
+                        ch.pipeline().addLast(new PacketMessageCodec());
                         ch.pipeline().addLast(new LoginRequestHandler());
                         ch.pipeline().addLast(new MessageRequestHandler());
-                        ch.pipeline().addLast(new PacketEncoder());
+//                        ch.pipeline().addLast(new PacketEncoder());
                     }
                 });
         bind(bootstrap, PORT);

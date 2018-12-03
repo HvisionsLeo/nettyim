@@ -2,9 +2,7 @@ package com.leo.im.handler.response;
 
 import com.leo.bean.request.LoginRequestPacket;
 import com.leo.bean.response.LoginResponsePacket;
-import com.leo.codec.PacketCodec;
 import com.leo.util.LoginUtil;
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 

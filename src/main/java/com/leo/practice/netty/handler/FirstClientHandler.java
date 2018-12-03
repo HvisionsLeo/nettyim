@@ -1,6 +1,7 @@
 package com.leo.practice.netty.handler;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -18,11 +19,12 @@ public class FirstClientHandler extends ChannelInboundHandlerAdapter {
     // 在客户端建立成功之后触发
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-
-        // 获取数据
-        ByteBuf buf = getByteBuf(ctx);
-        // 写入数据
-        ctx.channel().writeAndFlush(buf);
+        for (int i = 0; i < 1000; i++) {
+            // 获取数据
+            ByteBuf buf = getByteBuf(ctx);
+            // 写入数据
+            ctx.channel().writeAndFlush(buf);
+        }
     }
 
     @Override
@@ -32,7 +34,7 @@ public class FirstClientHandler extends ChannelInboundHandlerAdapter {
     }
 
     private ByteBuf getByteBuf(ChannelHandlerContext ctx) {
-        String data = DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss") + "你好，Netty!";
+        String data = DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss") + "你好，Netty!\t";
         // ctx.alloc()获取一个ByteBuf 内存管理器
         // 获取二进制抽象ByteBuf
         ByteBuf byteBuf = ctx.alloc().buffer();

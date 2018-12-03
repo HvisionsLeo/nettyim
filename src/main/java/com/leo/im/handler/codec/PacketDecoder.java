@@ -1,6 +1,5 @@
 package com.leo.im.handler.codec;
 
-import com.leo.bean.Packet;
 import com.leo.codec.PacketCodec;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

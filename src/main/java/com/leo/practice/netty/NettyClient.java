@@ -3,11 +3,16 @@ package com.leo.practice.netty;
 
 import com.leo.practice.netty.handler.FirstClientHandler;
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.DelimiterBasedFrameDecoder;
+import io.netty.handler.codec.FixedLengthFrameDecoder;
+import io.netty.handler.codec.LineBasedFrameDecoder;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
 import java.util.Date;
@@ -40,6 +45,9 @@ public class NettyClient {
                     // 向服务端读写数据
                     @Override
                     protected void initChannel(Channel channel) throws Exception {
+//                        channel.pipeline().addLast(new LineBasedFrameDecoder(1024));
+                        ByteBuf byteBuf = Unpooled.copiedBuffer("\t".getBytes());
+                        channel.pipeline().addLast(new DelimiterBasedFrameDecoder(1024, byteBuf));
                         channel.pipeline().addLast(new FirstClientHandler());
                     }
                 });

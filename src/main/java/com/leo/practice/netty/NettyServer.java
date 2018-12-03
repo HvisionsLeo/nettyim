@@ -1,5 +1,6 @@
 package com.leo.practice.netty;
 
+import com.leo.practice.netty.handler.FirstServerHandler;
 import com.leo.practice.netty.handler.inbound.InBoundHandlerA;
 import com.leo.practice.netty.handler.inbound.InBoundHandlerB;
 import com.leo.practice.netty.handler.inbound.InBoundHandlerC;
@@ -7,11 +8,17 @@ import com.leo.practice.netty.handler.outbound.OutBoundHandlerA;
 import com.leo.practice.netty.handler.outbound.OutBoundHandlerB;
 import com.leo.practice.netty.handler.outbound.OutBoundHandlerC;
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.DelimiterBasedFrameDecoder;
+import io.netty.handler.codec.FixedLengthFrameDecoder;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.LineBasedFrameDecoder;
 
 /**
  * @Description: netty服务端
@@ -49,16 +56,25 @@ public class NettyServer {
                     @Override
                     protected void initChannel(NioSocketChannel nioSocketChannel) throws Exception {
 //                        nioSocketChannel.pipeline().addLast(new StringDecoder());
-//                        nioSocketChannel.pipeline().addLast(new FirstServerHandler());
+                        // 固定长度拆包器FixedLengthFrameDecoder
+//                        nioSocketChannel.pipeline().addLast(new FixedLengthFrameDecoder(34));
+                        // 换行符拆包器LineBasedFrameDecoder \n
+//                        nioSocketChannel.pipeline().addLast(new LineBasedFrameDecoder(1024));
+                        // 自定义分隔符拆包器
+//                        ByteBuf byteBuf = Unpooled.copiedBuffer("\t".getBytes());
+//                        nioSocketChannel.pipeline().addLast(new DelimiterBasedFrameDecoder(1024, byteBuf));
+                        // 基于长度拆包器 （最大长度，长度域的偏移量，长度域的长度）
+//                        nioSocketChannel.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 7, 4));
+                        nioSocketChannel.pipeline().addLast(new FirstServerHandler());
                         // inBoundHandler 处理读取数据的逻辑链 A->B->C
-                        nioSocketChannel.pipeline().addLast(new InBoundHandlerA());
-                        nioSocketChannel.pipeline().addLast(new InBoundHandlerB());
-                        nioSocketChannel.pipeline().addLast(new InBoundHandlerC());
+//                        nioSocketChannel.pipeline().addLast(new InBoundHandlerA());
+//                        nioSocketChannel.pipeline().addLast(new InBoundHandlerB());
+//                        nioSocketChannel.pipeline().addLast(new InBoundHandlerC());
 
                         // outBoundHandler 处理写数据的逻辑链 outBound执行顺序和添加顺序相反 C->B->A
-                        nioSocketChannel.pipeline().addLast(new OutBoundHandlerA());
-                        nioSocketChannel.pipeline().addLast(new OutBoundHandlerB());
-                        nioSocketChannel.pipeline().addLast(new OutBoundHandlerC());
+//                        nioSocketChannel.pipeline().addLast(new OutBoundHandlerA());
+//                        nioSocketChannel.pipeline().addLast(new OutBoundHandlerB());
+//                        nioSocketChannel.pipeline().addLast(new OutBoundHandlerC());
                     }
                 });
         bind(serverBootstrap, 8081);

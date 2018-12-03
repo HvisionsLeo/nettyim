@@ -2,8 +2,8 @@ package com.leo.im;
 
 import com.leo.bean.request.MessageRequestPacket;
 import com.leo.codec.PacketCodec;
-import com.leo.im.handler.codec.PacketDecoder;
-import com.leo.im.handler.codec.PacketEncoder;
+import com.leo.im.handler.codec.PacketMessageCodec;
+import com.leo.im.handler.codec.Spliter;
 import com.leo.im.handler.response.LoginResponseHandler;
 import com.leo.im.handler.response.MessageResponseHandler;
 import com.leo.util.LoginUtil;
@@ -45,10 +45,13 @@ public class IMClient {
                     @Override
                     protected void initChannel(Channel ch) throws Exception {
 //                        ch.pipeline().addLast(new ClientHandler());
-                        ch.pipeline().addLast(new PacketDecoder());
+//                        ch.pipeline().addLast(new PacketDecoder());
+                        // 拆包，粘包解决
+                        ch.pipeline().addLast(new Spliter());
+                        ch.pipeline().addLast(new PacketMessageCodec());
                         ch.pipeline().addLast(new LoginResponseHandler());
                         ch.pipeline().addLast(new MessageResponseHandler());
-                        ch.pipeline().addLast(new PacketEncoder());
+//                        ch.pipeline().addLast(new PacketEncoder());
                     }
                 });
         connect(bootstrap, HOST, PORT, MAX_RETRY);

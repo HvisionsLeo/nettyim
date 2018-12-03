@@ -14,5 +14,8 @@ public class MessageResponseHandler extends SimpleChannelInboundHandler<MessageR
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, MessageResponsePacket msg) throws Exception {
         System.out.println("接收到服务端的回复->" + msg.getMessage());
+        if ("exit".equals(msg.getMessage())) {
+            ctx.channel().close();
+        }
     }
 }

@@ -17,6 +17,7 @@ public class InBoundHandlerC extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         System.out.println("InBoundHandlerC:" + ((ByteBuf) msg).toString(Charset.forName("utf-8")));
 //        super.channelRead(ctx, msg);
+        // 要进入outBoundHandler需要调用下面方法
         ctx.channel().writeAndFlush(msg);
     }
 }
