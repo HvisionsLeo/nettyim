@@ -1,6 +1,11 @@
 package com.leo.practice.netty;
 
-import com.leo.practice.netty.handler.FirstServerHandler;
+import com.leo.practice.netty.handler.inbound.InBoundHandlerA;
+import com.leo.practice.netty.handler.inbound.InBoundHandlerB;
+import com.leo.practice.netty.handler.inbound.InBoundHandlerC;
+import com.leo.practice.netty.handler.outbound.OutBoundHandlerA;
+import com.leo.practice.netty.handler.outbound.OutBoundHandlerB;
+import com.leo.practice.netty.handler.outbound.OutBoundHandlerC;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -44,7 +49,16 @@ public class NettyServer {
                     @Override
                     protected void initChannel(NioSocketChannel nioSocketChannel) throws Exception {
 //                        nioSocketChannel.pipeline().addLast(new StringDecoder());
-                        nioSocketChannel.pipeline().addLast(new FirstServerHandler());
+//                        nioSocketChannel.pipeline().addLast(new FirstServerHandler());
+                        // inBoundHandler 处理读取数据的逻辑链 A->B->C
+                        nioSocketChannel.pipeline().addLast(new InBoundHandlerA());
+                        nioSocketChannel.pipeline().addLast(new InBoundHandlerB());
+                        nioSocketChannel.pipeline().addLast(new InBoundHandlerC());
+
+                        // outBoundHandler 处理写数据的逻辑链 outBound执行顺序和添加顺序相反 C->B->A
+                        nioSocketChannel.pipeline().addLast(new OutBoundHandlerA());
+                        nioSocketChannel.pipeline().addLast(new OutBoundHandlerB());
+                        nioSocketChannel.pipeline().addLast(new OutBoundHandlerC());
                     }
                 });
         bind(serverBootstrap, 8081);
