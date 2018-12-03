@@ -65,13 +65,13 @@ public class PacketCodec {
     /**
      * 编码
      *
-     * @param alloc  ByteBuf 分配器
+     * @param byteBuf  ByteBuf
      * @param packet 数据包
      * @return byteBuf
      */
-    public ByteBuf encode(ByteBufAllocator alloc, Packet packet) {
+    public ByteBuf encode(ByteBuf byteBuf, Packet packet) {
         // 创建ByteBuf对象
-        ByteBuf byteBuf = alloc.ioBuffer();
+//        ByteBuf byteBuf = alloc.ioBuffer();
         // 序列化java对象
         byte[] bytes = Serializer.DEFAULT.serializer(packet);
 

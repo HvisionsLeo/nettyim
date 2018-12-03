@@ -35,14 +35,14 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
                 rtnPacket.setSuccess(false);
                 rtnPacket.setReason("密码不正确！");
             }
-            ByteBuf rtnBuf = PacketCodec.INSTANCE().encode(ctx.alloc(), rtnPacket);
+            ByteBuf rtnBuf = PacketCodec.INSTANCE().encode(ctx.alloc().ioBuffer(), rtnPacket);
             ctx.channel().writeAndFlush(rtnBuf);
         } else if (packet instanceof MessageRequestPacket) {
             MessageRequestPacket requestPacket = (MessageRequestPacket) packet;
             MessageResponsePacket rtnPacket = new MessageResponsePacket();
             System.out.println("接收到客户端发送消息：" +  requestPacket.getMessage());
             rtnPacket.setMessage(requestPacket.getMessage());
-            ByteBuf rtnBuf = PacketCodec.INSTANCE().encode(ctx.alloc(), rtnPacket);
+            ByteBuf rtnBuf = PacketCodec.INSTANCE().encode(ctx.alloc().ioBuffer(), rtnPacket);
             ctx.channel().writeAndFlush(rtnBuf);
         }
     }
