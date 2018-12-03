@@ -16,3 +16,13 @@ Netty 入门与实战：仿写微信 IM 即时通讯系统
 `6.Netty 社区活跃，遇到问题随时邮件列表或者 issue`
 
 `7.Netty 已经历各大 RPC 框架，消息中间件，分布式通信中间件线上的广泛验证，健壮性无比强大`
+
+**拆包粘包**
+
+`1. 固定长度的拆包器 FixedLengthFrameDecoder`
+
+`2. 行拆包器 LineBasedFrameDecoder`
+
+`3. 分隔符拆包器 DelimiterBasedFrameDecoder`
+
+`4. 基于长度域拆包器 LengthFieldBasedFrameDecoder`
