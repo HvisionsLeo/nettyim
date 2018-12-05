@@ -1,6 +1,7 @@
 package com.leo.practice.netty;
 
 import com.leo.practice.netty.handler.FirstServerHandler;
+import com.leo.practice.netty.handler.LifeCycleTestHandler;
 import com.leo.practice.netty.handler.inbound.InBoundHandlerA;
 import com.leo.practice.netty.handler.inbound.InBoundHandlerB;
 import com.leo.practice.netty.handler.inbound.InBoundHandlerC;
@@ -65,6 +66,7 @@ public class NettyServer {
 //                        nioSocketChannel.pipeline().addLast(new DelimiterBasedFrameDecoder(1024, byteBuf));
                         // 基于长度拆包器 （最大长度，长度域的偏移量，长度域的长度）
 //                        nioSocketChannel.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 7, 4));
+                        nioSocketChannel.pipeline().addLast(new LifeCycleTestHandler());
                         nioSocketChannel.pipeline().addLast(new FirstServerHandler());
                         // inBoundHandler 处理读取数据的逻辑链 A->B->C
 //                        nioSocketChannel.pipeline().addLast(new InBoundHandlerA());
@@ -85,11 +87,26 @@ public class NettyServer {
             // 判断是否绑定成功
             if (future.isSuccess()) {
                 System.out.println("端口号：[" + port + "]绑定成功！");
+                getCount();
             } else {
                 // 绑定失败，则将端口号+1继续绑定
                 System.err.println("端口号：[" + port + "]绑定失败！");
                 bind(serverBootstrap, port + 1);
             }
         });
+    }
+
+    private static void getCount() {
+        new Thread(() -> {
+            while (true) {
+                System.out.println("当前在线人数：" + LifeCycleTestHandler.COUNT);
+                System.out.println("当前接收到字节：" + LifeCycleTestHandler.ACCEPT_BYTE + "bit");
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 }

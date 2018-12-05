@@ -19,12 +19,12 @@ public class FirstClientHandler extends ChannelInboundHandlerAdapter {
     // 在客户端建立成功之后触发
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        for (int i = 0; i < 1000; i++) {
+//        for (int i = 0; i < 1000; i++) {
             // 获取数据
             ByteBuf buf = getByteBuf(ctx);
             // 写入数据
             ctx.channel().writeAndFlush(buf);
-        }
+//        }
     }
 
     @Override

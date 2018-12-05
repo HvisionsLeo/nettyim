@@ -17,14 +17,14 @@ public class FirstServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        String data = DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss") + "客户端已连接！\t";
+        String data = DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss") + "客户端已连接！";
         ByteBuf b = getByteBuf(ctx, data);
         ctx.channel().writeAndFlush(b);
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        String data = DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss") + "服务端收到消息：你好，Netty!\t";
+        String data = DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss") + "服务端收到消息：你好，Netty!";
         // 接收数据
         ByteBuf byteBuf = (ByteBuf) msg;
         System.out.println("接收到客户端数据->" + byteBuf.toString(Charset.forName("utf-8")));

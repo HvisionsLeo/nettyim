@@ -47,7 +47,7 @@ public class NettyClient {
                     protected void initChannel(Channel channel) throws Exception {
 //                        channel.pipeline().addLast(new LineBasedFrameDecoder(1024));
                         ByteBuf byteBuf = Unpooled.copiedBuffer("\t".getBytes());
-                        channel.pipeline().addLast(new DelimiterBasedFrameDecoder(1024, byteBuf));
+//                        channel.pipeline().addLast(new DelimiterBasedFrameDecoder(1024, byteBuf));
                         channel.pipeline().addLast(new FirstClientHandler());
                     }
                 });
