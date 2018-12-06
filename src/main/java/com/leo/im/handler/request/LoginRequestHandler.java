@@ -2,6 +2,7 @@ package com.leo.im.handler.request;
 
 import com.leo.bean.request.LoginRequestPacket;
 import com.leo.bean.response.LoginResponsePacket;
+import com.leo.util.LoginUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
@@ -19,6 +20,7 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
         System.out.println("接收到登录请求-> username:" + msg.getUsername() + ", password:" + msg.getPassword());
         LoginResponsePacket packet = new LoginResponsePacket();
         if (valid(msg)) {
+            LoginUtil.markAsLogin(ctx.channel());
             packet.setSuccess(true);
         } else {
             packet.setSuccess(false);

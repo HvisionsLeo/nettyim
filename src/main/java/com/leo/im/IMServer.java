@@ -1,5 +1,6 @@
 package com.leo.im;
 
+import com.leo.im.handler.AuthHandler;
 import com.leo.im.handler.codec.PacketMessageCodec;
 import com.leo.im.handler.codec.Spliter;
 import com.leo.im.handler.request.LoginRequestHandler;
@@ -39,6 +40,8 @@ public class IMServer {
                         ch.pipeline().addLast(new Spliter());
                         ch.pipeline().addLast(new PacketMessageCodec());
                         ch.pipeline().addLast(new LoginRequestHandler());
+                        // 用户认证handler
+                        ch.pipeline().addLast(new AuthHandler());
                         ch.pipeline().addLast(new MessageRequestHandler());
 //                        ch.pipeline().addLast(new PacketEncoder());
                     }
