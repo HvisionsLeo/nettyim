@@ -1,5 +1,6 @@
 package com.leo.bean;
 
+import com.leo.session.Session;
 import io.netty.util.AttributeKey;
 
 /**
@@ -11,4 +12,6 @@ public interface Attributes {
 
     // 登录成功标志位
     AttributeKey<Boolean> LOGIN = AttributeKey.newInstance("login");
+
+    AttributeKey<Session> SESSION = AttributeKey.newInstance("session");
 }

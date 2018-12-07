@@ -1,6 +1,8 @@
 package com.leo.im.handler.response;
 
 import com.leo.bean.response.MessageResponsePacket;
+import com.leo.session.Session;
+import com.leo.util.SessionUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
@@ -13,9 +15,15 @@ public class MessageResponseHandler extends SimpleChannelInboundHandler<MessageR
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, MessageResponsePacket msg) throws Exception {
-        System.out.println("接收到服务端的回复->" + msg.getMessage());
-        if ("exit".equals(msg.getMessage())) {
-            ctx.channel().close();
-        }
+        // 打印接收到消息
+        System.out.println(msg.getFromUserId() + ":" + msg.getFromUserName() + "->" + msg.getMessage());
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        // 登出操作
+        Session session = SessionUtil.getSession(ctx.channel());
+        System.out.println(session.getUserId() + ":" + session.getUserName() + "已经登出！");
+        SessionUtil.unBindSession(ctx.channel());
     }
 }

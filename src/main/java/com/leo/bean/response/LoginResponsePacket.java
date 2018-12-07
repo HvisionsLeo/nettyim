@@ -10,8 +10,10 @@ import lombok.Data;
  * @Date: 2018-11-30 下午 2:30
  */
 @Data
-public class LoginResponsePacket extends Packet{
+public class LoginResponsePacket extends Packet {
 
+    private String userId;
+    private String userName;
     private boolean success;
     private String reason;
 
