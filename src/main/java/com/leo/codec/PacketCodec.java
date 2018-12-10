@@ -1,9 +1,13 @@
 package com.leo.codec;
 
 import com.leo.bean.Command;
+import com.leo.bean.request.CreateGroupRequestPacket;
+import com.leo.bean.request.LogOutRequestPacket;
 import com.leo.bean.request.LoginRequestPacket;
 import com.leo.bean.Packet;
 import com.leo.bean.request.MessageRequestPacket;
+import com.leo.bean.response.CreateGroupResponsePacket;
+import com.leo.bean.response.LogOutResponsePacket;
 import com.leo.bean.response.LoginResponsePacket;
 import com.leo.bean.response.MessageResponsePacket;
 import com.leo.serializer.Serializer;
@@ -34,6 +38,10 @@ public class PacketCodec {
         packetTypeMap.put(Command.LOGIN_RESPONSE, LoginResponsePacket.class);
         packetTypeMap.put(Command.MESSAGE_REQUEST, MessageRequestPacket.class);
         packetTypeMap.put(Command.MESSAGE_RESPONSE, MessageResponsePacket.class);
+        packetTypeMap.put(Command.LOGOUT_REQUEST, LogOutRequestPacket.class);
+        packetTypeMap.put(Command.LOGOUT_RESPONSE, LogOutResponsePacket.class);
+        packetTypeMap.put(Command.CREATE_GROUP_REQUEST, CreateGroupRequestPacket.class);
+        packetTypeMap.put(Command.CREATE_GROUP_RESPONSE, CreateGroupResponsePacket.class);
         serializerMap = new HashMap<>();
         serializerMap.put(SerializerAlgorithm.JSON, new JSONSerializer());
     }

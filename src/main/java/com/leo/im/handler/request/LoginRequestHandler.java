@@ -17,14 +17,18 @@ import io.netty.channel.SimpleChannelInboundHandler;
  */
 public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginRequestPacket> {
 
+    private static Integer USER_ID = 0;
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, LoginRequestPacket msg) throws Exception {
         System.out.println("接收到登录请求-> username:" + msg.getUsername() + ", password:" + msg.getPassword());
         LoginResponsePacket packet = new LoginResponsePacket();
-        packet.setUserId(msg.getUserId());
         packet.setUserName(msg.getUsername());
         if (valid(msg)) {
-            SessionUtil.bindSession(new Session(msg.getUserId(), msg.getUsername()), ctx.channel());
+            USER_ID++;
+            String userId = "U_" + USER_ID;
+            packet.setUserId(userId);
+            SessionUtil.bindSession(new Session(packet.getUserId(), packet.getUserName()), ctx.channel());
             packet.setSuccess(true);
         } else {
             packet.setSuccess(false);

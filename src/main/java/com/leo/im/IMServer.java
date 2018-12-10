@@ -3,6 +3,8 @@ package com.leo.im;
 import com.leo.im.handler.AuthHandler;
 import com.leo.im.handler.codec.PacketMessageCodec;
 import com.leo.im.handler.codec.Spliter;
+import com.leo.im.handler.request.CreateGroupRequestHandler;
+import com.leo.im.handler.request.LogOutRequestHandler;
 import com.leo.im.handler.request.LoginRequestHandler;
 import com.leo.im.handler.request.MessageRequestHandler;
 import io.netty.bootstrap.ServerBootstrap;
@@ -42,7 +44,9 @@ public class IMServer {
                         ch.pipeline().addLast(new LoginRequestHandler());
                         // 用户认证handler
                         ch.pipeline().addLast(new AuthHandler());
+                        ch.pipeline().addLast(new CreateGroupRequestHandler());
                         ch.pipeline().addLast(new MessageRequestHandler());
+                        ch.pipeline().addLast(new LogOutRequestHandler());
 //                        ch.pipeline().addLast(new PacketEncoder());
                     }
                 });

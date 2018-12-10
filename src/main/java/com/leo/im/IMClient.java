@@ -1,16 +1,15 @@
 package com.leo.im;
 
-import com.leo.bean.request.LoginRequestPacket;
-import com.leo.bean.request.MessageRequestPacket;
-import com.leo.codec.PacketCodec;
+import com.leo.command.impl.ConsoleCommandManager;
+import com.leo.command.impl.LoginConsoleCommand;
 import com.leo.im.handler.codec.PacketMessageCodec;
 import com.leo.im.handler.codec.Spliter;
+import com.leo.im.handler.response.CreateGroupResponseHandler;
+import com.leo.im.handler.response.LogOutResponseHandler;
 import com.leo.im.handler.response.LoginResponseHandler;
 import com.leo.im.handler.response.MessageResponseHandler;
-import com.leo.util.LoginUtil;
 import com.leo.util.SessionUtil;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -19,7 +18,6 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
 import java.util.Scanner;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 
@@ -53,7 +51,9 @@ public class IMClient {
                         ch.pipeline().addLast(new Spliter());
                         ch.pipeline().addLast(new PacketMessageCodec());
                         ch.pipeline().addLast(new LoginResponseHandler());
+                        ch.pipeline().addLast(new CreateGroupResponseHandler());
                         ch.pipeline().addLast(new MessageResponseHandler());
+                        ch.pipeline().addLast(new LogOutResponseHandler());
 //                        ch.pipeline().addLast(new PacketEncoder());
                     }
                 });
@@ -85,28 +85,15 @@ public class IMClient {
      * @param channel
      */
     private static void startConsoleThread(Channel channel) {
+        ConsoleCommandManager consoleCommand = new ConsoleCommandManager();
+        LoginConsoleCommand loginConsoleCommand = new LoginConsoleCommand();
         Scanner scanner = new Scanner(System.in);
         new Thread(() -> {
             while (!Thread.interrupted()) {
                 if (SessionUtil.hasLogin(channel)) {
-                    System.out.println("输入要发送给的数据：");
-                    MessageRequestPacket packet = new MessageRequestPacket();
-                    packet.setToUserId(scanner.next());
-                    packet.setMessage(scanner.next());
-//                    ByteBuf byteBuf = PacketCodec.INSTANCE().encode(channel.alloc().ioBuffer(), packet);
-                    channel.writeAndFlush(packet);
+                    consoleCommand.exec(scanner, channel);
                 } else {
-                    System.out.println("输入用户名密码：");
-                    LoginRequestPacket packet = new LoginRequestPacket();
-                    packet.setUserId(scanner.next());
-                    packet.setUsername(scanner.next());
-                    packet.setPassword(scanner.next());
-                    channel.writeAndFlush(packet);
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    loginConsoleCommand.exec(scanner, channel);
                 }
             }
         }).start();

@@ -18,12 +18,4 @@ public class MessageResponseHandler extends SimpleChannelInboundHandler<MessageR
         // 打印接收到消息
         System.out.println(msg.getFromUserId() + ":" + msg.getFromUserName() + "->" + msg.getMessage());
     }
-
-    @Override
-    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        // 登出操作
-        Session session = SessionUtil.getSession(ctx.channel());
-        System.out.println(session.getUserId() + ":" + session.getUserName() + "已经登出！");
-        SessionUtil.unBindSession(ctx.channel());
-    }
 }

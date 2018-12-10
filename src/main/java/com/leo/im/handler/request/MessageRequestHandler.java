@@ -42,11 +42,4 @@ public class MessageRequestHandler extends SimpleChannelInboundHandler<MessageRe
             }
         }
     }
-
-    @Override
-    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        Session session = SessionUtil.getSession(ctx.channel());
-        System.out.println(session.getUserId() + ":" + session.getUserName() + "已经登出！");
-        SessionUtil.unBindSession(ctx.channel());
-    }
 }
