@@ -3,6 +3,7 @@ package com.leo.im.handler.request;
 import com.leo.bean.request.JoinGroupRequestPacket;
 import com.leo.bean.response.JoinGroupResponsePacket;
 import com.leo.util.SessionUtil;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
@@ -12,7 +13,22 @@ import io.netty.channel.group.ChannelGroup;
  * @Author: Leo
  * @Date: 2018-12-11 上午 10:33
  */
+@ChannelHandler.Sharable
 public class JoinGroupRequestHandler extends SimpleChannelInboundHandler<JoinGroupRequestPacket> {
+
+    private volatile static JoinGroupRequestHandler handler;
+
+    private JoinGroupRequestHandler() {
+    }
+
+    public synchronized static JoinGroupRequestHandler INSTANCE() {
+        synchronized (JoinGroupRequestHandler.class) {
+            if (handler == null) {
+                handler = new JoinGroupRequestHandler();
+            }
+        }
+        return handler;
+    }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, JoinGroupRequestPacket msg) throws Exception {

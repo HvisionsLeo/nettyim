@@ -4,6 +4,7 @@ import com.leo.bean.request.CreateGroupRequestPacket;
 import com.leo.bean.response.CreateGroupResponsePacket;
 import com.leo.util.SessionUtil;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
@@ -17,7 +18,24 @@ import java.util.List;
  * @Author: Leo
  * @Date: 2018-12-10 下午 4:40
  */
+@ChannelHandler.Sharable
 public class CreateGroupRequestHandler extends SimpleChannelInboundHandler<CreateGroupRequestPacket> {
+
+    private volatile static CreateGroupRequestHandler handler;
+
+    private CreateGroupRequestHandler() {
+
+    }
+
+    public static synchronized CreateGroupRequestHandler INSTANCE() {
+        synchronized (CreateGroupRequestHandler.class) {
+            if (handler == null) {
+                handler = new CreateGroupRequestHandler();
+            }
+        }
+        return handler;
+    }
+
     private static Integer GROUP_ID = 0;
 
     @Override

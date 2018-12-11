@@ -3,6 +3,7 @@ package com.leo.im.handler.response;
 import com.leo.bean.response.LoginResponsePacket;
 import com.leo.session.Session;
 import com.leo.util.SessionUtil;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
@@ -11,7 +12,22 @@ import io.netty.channel.SimpleChannelInboundHandler;
  * @Author: Leo
  * @Date: 2018-12-03 上午 11:12
  */
+@ChannelHandler.Sharable
 public class LoginResponseHandler extends SimpleChannelInboundHandler<LoginResponsePacket> {
+
+    private volatile static LoginResponseHandler handler;
+
+    private LoginResponseHandler() {
+    }
+
+    public synchronized static LoginResponseHandler INSTANCE() {
+        synchronized (LoginResponseHandler.class) {
+            if (handler == null) {
+                handler = new LoginResponseHandler();
+            }
+        }
+        return handler;
+    }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -28,7 +44,7 @@ public class LoginResponseHandler extends SimpleChannelInboundHandler<LoginRespo
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, LoginResponsePacket msg) throws Exception {
         if (msg.isSuccess()) {
-            SessionUtil.bindSession(new Session(msg.getUserId(), msg.getUserName()),ctx.channel());
+            SessionUtil.bindSession(new Session(msg.getUserId(), msg.getUserName()), ctx.channel());
             System.out.println("登陆成功！");
         } else {
             System.out.println("登录失败，原因：" + msg.getReason());

@@ -1,6 +1,7 @@
 package com.leo.im.handler;
 
 import com.leo.util.SessionUtil;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
@@ -9,7 +10,22 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
  * @Author: Leo
  * @Date: 2018-12-06 下午 3:33
  */
+@ChannelHandler.Sharable
 public class AuthHandler extends ChannelInboundHandlerAdapter {
+
+    private volatile static AuthHandler handler;
+
+    private AuthHandler() {
+    }
+
+    public synchronized static AuthHandler INSTANCE() {
+        synchronized (AuthHandler.class) {
+            if (handler == null) {
+                handler = new AuthHandler();
+            }
+        }
+        return handler;
+    }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {

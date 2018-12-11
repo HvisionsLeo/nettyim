@@ -5,6 +5,7 @@ import com.leo.bean.response.MessageResponsePacket;
 import com.leo.session.Session;
 import com.leo.util.SessionUtil;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
@@ -13,7 +14,22 @@ import io.netty.channel.SimpleChannelInboundHandler;
  * @Author: Leo
  * @Date: 2018-12-03 上午 11:11
  */
+@ChannelHandler.Sharable
 public class MessageRequestHandler extends SimpleChannelInboundHandler<MessageRequestPacket> {
+
+    private volatile static MessageRequestHandler handler;
+
+    private MessageRequestHandler() {
+    }
+
+    public synchronized static MessageRequestHandler INSTANCE() {
+        synchronized (MessageRequestHandler.class) {
+            if (handler == null) {
+                handler = new MessageRequestHandler();
+            }
+        }
+        return handler;
+    }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, MessageRequestPacket msg) throws Exception {

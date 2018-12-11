@@ -1,6 +1,7 @@
 package com.leo.im.handler.response;
 
 import com.leo.bean.response.CreateGroupResponsePacket;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
@@ -9,7 +10,22 @@ import io.netty.channel.SimpleChannelInboundHandler;
  * @Author: Leo
  * @Date: 2018-12-10 下午 4:59
  */
+@ChannelHandler.Sharable
 public class CreateGroupResponseHandler extends SimpleChannelInboundHandler<CreateGroupResponsePacket> {
+
+    private volatile static CreateGroupResponseHandler handler;
+
+    private CreateGroupResponseHandler() {
+    }
+
+    public synchronized static CreateGroupResponseHandler INSTANCE() {
+        synchronized (CreateGroupResponseHandler.class) {
+            if (handler == null) {
+                handler = new CreateGroupResponseHandler();
+            }
+        }
+        return handler;
+    }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, CreateGroupResponsePacket msg) throws Exception {

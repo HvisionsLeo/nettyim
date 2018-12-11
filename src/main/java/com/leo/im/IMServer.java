@@ -1,6 +1,7 @@
 package com.leo.im;
 
 import com.leo.im.handler.AuthHandler;
+import com.leo.im.handler.IMHandler;
 import com.leo.im.handler.codec.PacketMessageCodec;
 import com.leo.im.handler.codec.Spliter;
 import com.leo.im.handler.request.*;
@@ -37,17 +38,12 @@ public class IMServer {
 //                        ch.pipeline().addLast(new PacketDecoder());
                         // 拆包，粘包解决
                         ch.pipeline().addLast(new Spliter());
-                        ch.pipeline().addLast(new PacketMessageCodec());
-                        ch.pipeline().addLast(new LoginRequestHandler());
+                        ch.pipeline().addLast(PacketMessageCodec.INSTANCE());
+                        ch.pipeline().addLast(LoginRequestHandler.INSTANCE());
                         // 用户认证handler
-                        ch.pipeline().addLast(new AuthHandler());
-                        ch.pipeline().addLast(new CreateGroupRequestHandler());
-                        ch.pipeline().addLast(new JoinGroupRequestHandler());
-                        ch.pipeline().addLast(new QuitGroupRequestHandler());
-                        ch.pipeline().addLast(new ListGroupMembersRequestHandler());
-                        ch.pipeline().addLast(new SendToGroupRequestHandler());
-                        ch.pipeline().addLast(new MessageRequestHandler());
-                        ch.pipeline().addLast(new LogOutRequestHandler());
+                        ch.pipeline().addLast(AuthHandler.INSTANCE());
+                        // 聊天逻辑
+                        ch.pipeline().addLast(IMHandler.INSTANCE());
 //                        ch.pipeline().addLast(new PacketEncoder());
                     }
                 });
