@@ -4,10 +4,7 @@ import com.leo.command.impl.ConsoleCommandManager;
 import com.leo.command.impl.LoginConsoleCommand;
 import com.leo.im.handler.codec.PacketMessageCodec;
 import com.leo.im.handler.codec.Spliter;
-import com.leo.im.handler.response.CreateGroupResponseHandler;
-import com.leo.im.handler.response.LogOutResponseHandler;
-import com.leo.im.handler.response.LoginResponseHandler;
-import com.leo.im.handler.response.MessageResponseHandler;
+import com.leo.im.handler.response.*;
 import com.leo.util.SessionUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -34,7 +31,7 @@ public class IMClient {
 
     private static final int MAX_RETRY = 5;
 
-    public static void main(String[] args) {
+    public static void start() {
         NioEventLoopGroup group = new NioEventLoopGroup();
         Bootstrap bootstrap = new Bootstrap();
         bootstrap.group(group)
@@ -52,6 +49,9 @@ public class IMClient {
                         ch.pipeline().addLast(new PacketMessageCodec());
                         ch.pipeline().addLast(new LoginResponseHandler());
                         ch.pipeline().addLast(new CreateGroupResponseHandler());
+                        ch.pipeline().addLast(new JoinGroupResponseHandler());
+                        ch.pipeline().addLast(new QuitGroupResponseHandler());
+                        ch.pipeline().addLast(new ListGroupMembersResponseHandler());
                         ch.pipeline().addLast(new MessageResponseHandler());
                         ch.pipeline().addLast(new LogOutResponseHandler());
 //                        ch.pipeline().addLast(new PacketEncoder());

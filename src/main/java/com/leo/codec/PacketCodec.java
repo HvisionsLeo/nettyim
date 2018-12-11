@@ -1,20 +1,13 @@
 package com.leo.codec;
 
 import com.leo.bean.Command;
-import com.leo.bean.request.CreateGroupRequestPacket;
-import com.leo.bean.request.LogOutRequestPacket;
-import com.leo.bean.request.LoginRequestPacket;
+import com.leo.bean.request.*;
 import com.leo.bean.Packet;
-import com.leo.bean.request.MessageRequestPacket;
-import com.leo.bean.response.CreateGroupResponsePacket;
-import com.leo.bean.response.LogOutResponsePacket;
-import com.leo.bean.response.LoginResponsePacket;
-import com.leo.bean.response.MessageResponsePacket;
+import com.leo.bean.response.*;
 import com.leo.serializer.Serializer;
 import com.leo.serializer.SerializerAlgorithm;
 import com.leo.serializer.impl.JSONSerializer;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,6 +35,12 @@ public class PacketCodec {
         packetTypeMap.put(Command.LOGOUT_RESPONSE, LogOutResponsePacket.class);
         packetTypeMap.put(Command.CREATE_GROUP_REQUEST, CreateGroupRequestPacket.class);
         packetTypeMap.put(Command.CREATE_GROUP_RESPONSE, CreateGroupResponsePacket.class);
+        packetTypeMap.put(Command.JOIN_GROUP_REQUEST, JoinGroupRequestPacket.class);
+        packetTypeMap.put(Command.JOIN_GROUP_RESPONSE, JoinGroupResponsePacket.class);
+        packetTypeMap.put(Command.QUIT_GROUP_REQUEST, QuitGroupRequestPacket.class);
+        packetTypeMap.put(Command.QUIT_GROUP_RESPONSE, QuitGroupResponsePacket.class);
+        packetTypeMap.put(Command.LIST_GROUP_MEMBERS_REQUEST, ListGroupMembersRequestPacket.class);
+        packetTypeMap.put(Command.LIST_GROUP_MEMBERS_RESPONSE, ListGroupMembersResponsePacket.class);
         serializerMap = new HashMap<>();
         serializerMap.put(SerializerAlgorithm.JSON, new JSONSerializer());
     }

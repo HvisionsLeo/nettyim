@@ -3,6 +3,7 @@ package com.leo.util;
 import com.leo.bean.Attributes;
 import com.leo.session.Session;
 import io.netty.channel.Channel;
+import io.netty.channel.group.ChannelGroup;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,6 +16,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SessionUtil {
 
     private static Map<String, Channel> userIdChannelMap = new ConcurrentHashMap<>();
+
+    private static Map<String, ChannelGroup> channelGroupMap = new ConcurrentHashMap<>();
 
     public static void bindSession(Session session, Channel channel) {
         userIdChannelMap.put(session.getUserId(), channel);
@@ -38,5 +41,13 @@ public class SessionUtil {
 
     public static Channel getChannel(String userId) {
         return userIdChannelMap.get(userId);
+    }
+
+    public static void bindChannelGroup(String groupId, ChannelGroup channels) {
+        channelGroupMap.put(groupId, channels);
+    }
+
+    public static ChannelGroup getChannelGroup(String groupId) {
+        return channelGroupMap.get(groupId);
     }
 }
