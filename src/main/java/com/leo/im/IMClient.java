@@ -2,6 +2,8 @@ package com.leo.im;
 
 import com.leo.command.impl.ConsoleCommandManager;
 import com.leo.command.impl.LoginConsoleCommand;
+import com.leo.im.handler.HeartBeatTimeHandler;
+import com.leo.im.handler.IMIdleStateHandler;
 import com.leo.im.handler.codec.PacketMessageCodec;
 import com.leo.im.handler.codec.Spliter;
 import com.leo.im.handler.response.*;
@@ -45,6 +47,7 @@ public class IMClient {
 //                        ch.pipeline().addLast(new ClientHandler());
 //                        ch.pipeline().addLast(new PacketDecoder());
                         // 拆包，粘包解决
+                        ch.pipeline().addLast(new IMIdleStateHandler());
                         ch.pipeline().addLast(new Spliter());
                         ch.pipeline().addLast(PacketMessageCodec.INSTANCE());
                         ch.pipeline().addLast(LoginResponseHandler.INSTANCE());
@@ -55,6 +58,7 @@ public class IMClient {
                         ch.pipeline().addLast(SendToGroupResponseHandler.INSTANCE());
                         ch.pipeline().addLast(MessageResponseHandler.INSTANCE());
                         ch.pipeline().addLast(LogOutResponseHandler.INSTANCE());
+                        ch.pipeline().addLast(new HeartBeatTimeHandler());
 //                        ch.pipeline().addLast(new PacketEncoder());
                     }
                 });

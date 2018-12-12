@@ -1,6 +1,6 @@
 package com.leo.codec;
 
-import com.leo.bean.Command;
+import static com.leo.bean.Command.*;
 import com.leo.bean.request.*;
 import com.leo.bean.Packet;
 import com.leo.bean.response.*;
@@ -27,22 +27,24 @@ public class PacketCodec {
 
     static {
         packetTypeMap = new HashMap<>();
-        packetTypeMap.put(Command.LOGIN_REQUEST, LoginRequestPacket.class);
-        packetTypeMap.put(Command.LOGIN_RESPONSE, LoginResponsePacket.class);
-        packetTypeMap.put(Command.MESSAGE_REQUEST, MessageRequestPacket.class);
-        packetTypeMap.put(Command.MESSAGE_RESPONSE, MessageResponsePacket.class);
-        packetTypeMap.put(Command.LOGOUT_REQUEST, LogOutRequestPacket.class);
-        packetTypeMap.put(Command.LOGOUT_RESPONSE, LogOutResponsePacket.class);
-        packetTypeMap.put(Command.CREATE_GROUP_REQUEST, CreateGroupRequestPacket.class);
-        packetTypeMap.put(Command.CREATE_GROUP_RESPONSE, CreateGroupResponsePacket.class);
-        packetTypeMap.put(Command.JOIN_GROUP_REQUEST, JoinGroupRequestPacket.class);
-        packetTypeMap.put(Command.JOIN_GROUP_RESPONSE, JoinGroupResponsePacket.class);
-        packetTypeMap.put(Command.QUIT_GROUP_REQUEST, QuitGroupRequestPacket.class);
-        packetTypeMap.put(Command.QUIT_GROUP_RESPONSE, QuitGroupResponsePacket.class);
-        packetTypeMap.put(Command.LIST_GROUP_MEMBERS_REQUEST, ListGroupMembersRequestPacket.class);
-        packetTypeMap.put(Command.LIST_GROUP_MEMBERS_RESPONSE, ListGroupMembersResponsePacket.class);
-        packetTypeMap.put(Command.SEND_TO_GROUP_REQUEST, SendToGroupRequestPacket.class);
-        packetTypeMap.put(Command.SEND_TO_GROUP_RESPONSE, SendToGroupResponsePacket.class);
+        packetTypeMap.put(LOGIN_REQUEST, LoginRequestPacket.class);
+        packetTypeMap.put(LOGIN_RESPONSE, LoginResponsePacket.class);
+        packetTypeMap.put(MESSAGE_REQUEST, MessageRequestPacket.class);
+        packetTypeMap.put(MESSAGE_RESPONSE, MessageResponsePacket.class);
+        packetTypeMap.put(LOGOUT_REQUEST, LogOutRequestPacket.class);
+        packetTypeMap.put(LOGOUT_RESPONSE, LogOutResponsePacket.class);
+        packetTypeMap.put(CREATE_GROUP_REQUEST, CreateGroupRequestPacket.class);
+        packetTypeMap.put(CREATE_GROUP_RESPONSE, CreateGroupResponsePacket.class);
+        packetTypeMap.put(JOIN_GROUP_REQUEST, JoinGroupRequestPacket.class);
+        packetTypeMap.put(JOIN_GROUP_RESPONSE, JoinGroupResponsePacket.class);
+        packetTypeMap.put(QUIT_GROUP_REQUEST, QuitGroupRequestPacket.class);
+        packetTypeMap.put(QUIT_GROUP_RESPONSE, QuitGroupResponsePacket.class);
+        packetTypeMap.put(LIST_GROUP_MEMBERS_REQUEST, ListGroupMembersRequestPacket.class);
+        packetTypeMap.put(LIST_GROUP_MEMBERS_RESPONSE, ListGroupMembersResponsePacket.class);
+        packetTypeMap.put(SEND_TO_GROUP_REQUEST, SendToGroupRequestPacket.class);
+        packetTypeMap.put(SEND_TO_GROUP_RESPONSE, SendToGroupResponsePacket.class);
+        packetTypeMap.put(HEART_BEAT_REQUEST, HeartBeatRequestPacket.class);
+        packetTypeMap.put(HEART_BEAT_RESPONSE, HeartBeatResponsePacket.class);
         serializerMap = new HashMap<>();
         serializerMap.put(SerializerAlgorithm.JSON, new JSONSerializer());
     }

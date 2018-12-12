@@ -1,9 +1,11 @@
 package com.leo.im;
 
 import com.leo.im.handler.AuthHandler;
+import com.leo.im.handler.HeartBeatRequestHandler;
 import com.leo.im.handler.IMHandler;
 import com.leo.im.handler.codec.PacketMessageCodec;
 import com.leo.im.handler.codec.Spliter;
+import com.leo.im.handler.IMIdleStateHandler;
 import com.leo.im.handler.request.*;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
@@ -36,10 +38,13 @@ public class IMServer {
                     protected void initChannel(NioSocketChannel ch) throws Exception {
 //                        ch.pipeline().addLast(new ServerHandler());
 //                        ch.pipeline().addLast(new PacketDecoder());
+                        // 空闲检测
+                        ch.pipeline().addLast(new IMIdleStateHandler());
                         // 拆包，粘包解决
                         ch.pipeline().addLast(new Spliter());
                         ch.pipeline().addLast(PacketMessageCodec.INSTANCE());
                         ch.pipeline().addLast(LoginRequestHandler.INSTANCE());
+                        ch.pipeline().addLast(HeartBeatRequestHandler.INSTANCE());
                         // 用户认证handler
                         ch.pipeline().addLast(AuthHandler.INSTANCE());
                         // 聊天逻辑
